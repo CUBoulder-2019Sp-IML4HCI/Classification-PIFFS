@@ -63,7 +63,7 @@ void oscEvent(OscMessage theOscMessage) {
   
 }
 
-void showMessage(int i) { //TODO: change wave.setFrequency here based on i
+void showMessage(int i) { //Note: change colors and wave here based on i
     switch(i) { 
         case 1: 
             currentMessage = "Looking good.";
@@ -88,6 +88,8 @@ void showMessage(int i) { //TODO: change wave.setFrequency here based on i
             break;
         default: 
             currentMessage = Integer.toString(i);
+            currentHue = (int)generateColor(i);
+            currentTextHue = (int)generateColor((i+1));
             wave.setFrequency((float)(261 * Math.pow(1.059, i*2)));
             wave.setAmplitude(0.5); 
     } 
