@@ -21,4 +21,4 @@ With having three clearly defined states, classification is assumed to be suitab
 Our input provides 32 features: various expressions, emotions, and head orientations. We decided that the expressions and orientations are more informative than the emotions, so we have disabled the inputs "emotions.anger" and "emotions.disgust" for now, since they should not be helpful in determining if someone is asleep. 
 
 ## Choice of Algorithm
-
+So far, we are quite happy with the classification accuracy that the kNN algorithm (with k=1) provided us after just 349 training samples. In a second iteration, we trained the same dataset with a decision tree. But since no restrictions to the depth of the tree can be specified in Wekinator, the decision tree overfits the training sample. This becomes evident in the test runs: The alarm does not sound unless the face and eye positions exactly match the test instances.
