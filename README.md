@@ -18,6 +18,7 @@ All three states can be marked out by facial parameters. Either of the three sta
 With having three clearly defined states, classification is assumed to be suitable for this setting.
 
 ## Feature Engineering
+Our input provides 32 features: various expressions, emotions, and head orientations. We decided that the expressions and orientations are more informative than the emotions, so we have disabled the inputs "emotions.anger" and "emotions.disgust" for now, since they should not be helpful in determining if someone is asleep. 
 
 ## Choice of Algorithm
 
