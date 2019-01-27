@@ -6,7 +6,7 @@
    - Alternatively, adjust frame size to fit images with each change
 - Let's smooth the whole system. The Coffee warning should only go on if you yawn twice or three times. Class 3 should only come on if you are asleep for more than 5 seconds. The output shouldn't flick around all the time, so it's less annyoing.
    - If this is possible. The simple classifier models we're using may not allow time to be a component that factors into when classes change.
-      - But, thinking about how to do this manually, instead of switching images based directly on the model's input, we could use counter variables to keep track of how many times a certain classification is detected, and only change images/sounds when, for example, the "coffee" state is detected 3 times during the same state. Or we could manually add some time-tracking logic in draw().
+      - But, thinking about how to do this manually, instead of switching images based directly on the model's input, we could use counter variables to keep track of how many times a certain classification is detected, and only change images/sounds when, for example, the "coffee" state is detected (some reasonable number X) times during the same state. Or we could manually add some time-tracking logic in draw().
    - Experiment with different models (e.g. SVM with soft margins)
 - Stop Sound when classes switch. When class 2 (Coffee!!) is present, I don't want to hear the sound from class 1
    - Probably as simple as calling SoundFile.pause(); see: https://processing.org/reference/libraries/sound/SoundFile.html
