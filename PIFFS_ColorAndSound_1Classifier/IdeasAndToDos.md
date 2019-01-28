@@ -10,7 +10,8 @@
    - Experiment with different models (e.g. SVM with soft margins)
 - :white_check_mark: Stop Sound when classes switch. When class 2 (Coffee!!) is present, I don't want to hear the sound from class 1
    - Probably as simple as calling SoundFile.pause(); see: https://processing.org/reference/libraries/sound/SoundFile.html
-- Create case for missing Input signal from Face Recognition. If no OSC input goes through, a message and countdown should appear "Return back to your seat. Alarm will go on in 5... 4.... 3.... 2... 1...". If there is still no input after 5 (or10?) seconds, switch to the Alarm class (class 3)
+- :question: Create case for missing Input signal from Face Recognition. If no OSC input goes through, a message and countdown should appear "Return back to your seat. Alarm will go on in 5... 4.... 3.... 2... 1...". If there is still no input after 5 (or10?) seconds, switch to the Alarm class (class 3)
+   - This will be harder than planned; face recognition input stops sending OSC messages when face isn't present, meaning Wekinator cannot train on "no face visible"
    - Could start by adding a fourth class where the training input is just us outside the camera's view.
    - Again, not sure if we can actually incorportate time into this classification program (without hardcoding it ourselves in draw(); see: https://processing.org/examples/setupdraw.html)
 
