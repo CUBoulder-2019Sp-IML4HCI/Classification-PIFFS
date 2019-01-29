@@ -31,6 +31,8 @@ Our input provides 32 features: various expressions, emotions, and head orientat
 
 ## Choice of Algorithm
 So far, we are quite happy with the classification accuracy that the kNN algorithm (with k=1) provided us after just 349 training samples. In a second iteration, we trained the same dataset with a decision tree. But since no restrictions to the depth of the tree can be specified in Wekinator, the decision tree overfits the training sample. This becomes evident in the test runs: The alarm does not sound unless the face and eye positions exactly match the test instances.
+**TODO: numerical evidence of overfitting**
+In addition to our classification algorithm, our final PIFFS output code contains decision-making logic that essentially treats the model's output as suggestions rathan than direct instructions. By this we meen that we have established thresholds for how long a person must appear drowsy or asleep before they hear the corresponding alarm. This dramatically reduced the state flickering which is commmonly problematic in beginner classification programs like this. 
 
 ## What We Learned
 For one, we learned that classification models alone can reliably detect if a person is _making an expression that resembles_ being drowsy or asleep, but relying on that alone leads to flickery output in the real world. To fully solve our problem, we must observe that a person is _behaving like_ they are drowsy or asleep, which requires tracking facial expressions over time. We achieved that by exploiting the rate at which our input sends OSC messages to the output (roughly 6 messages per second). Additionally, we learned:
