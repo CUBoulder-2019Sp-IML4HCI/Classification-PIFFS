@@ -77,7 +77,7 @@ void draw() {
 //This is called automatically when OSC message is received
 //Note: Wekinator sends 6 messages a second from the face tracking input
 void oscEvent(OscMessage theOscMessage) {
- //println("received message");
+  //println("received message");
   if (theOscMessage.checkAddrPattern("/wek/outputs") == true) {
     if(theOscMessage.checkTypetag("f")) {
       float suggestion = theOscMessage.get(0).floatValue();
@@ -88,7 +88,64 @@ void oscEvent(OscMessage theOscMessage) {
   }
 }
 
-//Swap images and sounds based on classification
+//Decide what state to set based on the classification's suggestions
+int determineState(int suggestion) {
+    int nextState = suggestion;
+    
+    switch(state) { 
+        case 1: //Pilot is awake
+            if (suggestion == 2) { //Don't flip to the drowsy state until threshold is met
+                numDrowsyDetections++;
+                if (numDrowsyDetections >= drowsyThreshold) {
+                    nextState = 2;
+                    //state change determined, reset the counts
+                    numDrowsyDetections = 0;
+                    numSleepDetections = 0;
+                } else {
+                    nextState = 1; //ignore suggestion
+                }
+            }
+            else if (suggestion == 3) { //Don't flip to the asleep state until threshold is met
+                numSleepDetections++;
+                if (numSleepDetections >= sleepThreshold) {
+                    nextState = 3; 
+                    //state change determined, reset the counts
+                    numDrowsyDetections = 0;
+                    numSleepDetections = 0;
+                } else {
+                    nextState = 1;  //ignore suggestion
+                }
+            }
+            break; 
+        case 2: //Pilot is drowsy
+            if (suggestion == 1) {
+                //numSleepDetections = 0; //no threshold for wakefulness, don't carry over suspicion of sleepiness 
+            }
+            if (suggestion == 3) { //Don't flip to the asleep state until threshold is met
+                numSleepDetections++;
+                if (numSleepDetections >= sleepThreshold) {
+                    nextState = 3;  
+                    //state change determined, reset the count
+                    numSleepDetections = 0;
+                } else {
+                    nextState = 2; 
+                }
+            }
+            break;
+        case 3: //Pilot is asleep
+            //no threshold for waking up
+            numDrowsyDetections = 0;
+            numSleepDetections = 0;
+            break;
+        default:
+            println("Default reached for some reason.");
+            break;
+    }
+    
+    return nextState;  
+}
+
+//Swap images and sounds to the given state
 void changeImgAndSound(int nextState) {
     if (nextState == 1) {
       state = 1;
@@ -132,51 +189,6 @@ void changeImgAndSound(int nextState) {
       currentB= 0;
       currentFont = createFont("Times", 60);
     }
-}
-
-int determineState(int suggestion) {
-    int nextState = suggestion;
-    
-    switch(state) { 
-        case 1: //Pilot is awake
-            if (suggestion == 2) { //Don't flip to the drowsy state until threshold is met
-                numDrowsyDetections++;
-                if (numDrowsyDetections >= drowsyThreshold) {
-                    nextState = 2;  
-                } else {
-                    nextState = 1; 
-                }
-            }
-            else if (suggestion == 3) { //Don't flip to the asleep state until threshold is met
-                numSleepDetections++;
-                if (numSleepDetections >= sleepThreshold) {
-                    nextState = 3;  
-                } else {
-                    nextState = 1; 
-                }
-            }
-            break; 
-        case 2: //Pilot is drowsy
-            numDrowsyDetections = 0;
-            if (suggestion == 3) { //Don't flip to the asleep state until threshold is met
-                numSleepDetections++;
-                if (numSleepDetections >= sleepThreshold) {
-                    nextState = 3;  
-                } else {
-                    nextState = 2; 
-                }
-            }
-            break;
-        case 3: //Pilot is asleep
-            numDrowsyDetections = 0;
-            numSleepDetections = 0;
-            break;
-        default:
-            println("Default reached for some reason.");
-            break;
-    }
-    
-    return nextState;  
 }
 
 //Write text to screen.
