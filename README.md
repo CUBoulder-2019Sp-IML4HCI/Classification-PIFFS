@@ -5,7 +5,7 @@ The Pilot Fatigue Finding System (PIFFS) aims to prevent sleepiness, fatigue, an
 ### Version 1:
 https://www.youtube.com/watch?v=zLAZLwdBAfA&feature=youtu.be
 ### Final Version:
-TBA
+https://www.youtube.com/watch?v=nA-D9UScmS0&feature=youtu.be
 
 ## Functional Goal
 The goal of the Pilot Fatigue Finding System (PIFFS) is to prevent sleepiness, fatigue and degenerating vigilance of airline transport pilots. During prolonged cruise flights, pilots are prone to falling asleep. PIFFS aims to detect three states of fatigue using facial recognition technology. Once a severe state of fatigue, or even worse, sleep, is detected, the system responds with an alarming sound and a text message, prompting the pilot to regain attention and situational awareness.
@@ -30,12 +30,21 @@ With having three clearly defined states, classification is assumed to be suitab
 Our input provides 32 features: various expressions, emotions, and head orientations. We decided that the expressions and orientations are more informative than the emotions, so we have disabled all `emotions.*` inputs. We originally thought that a select few facial features like how closed the eyes are or how tilted the head is would be optimal at differentiating our three states (wakefullness, drowsiness, sleep), but we learned that relying on so few of our 32 inputs led to severe overfitting. The human face is nuanced when behaving drowsily and keeping more input features led to a more reliable model. 
 
 ## Choice of Algorithm
-So far, we are quite happy with the classification accuracy that the kNN algorithm (with k=1) provided us after just 349 training samples. In a second iteration, we trained the same dataset with a decision tree. But since no restrictions to the depth of the tree can be specified in Wekinator, the decision tree overfits the training sample. This becomes evident in the test runs: The alarm does not sound unless the face and eye positions exactly match the test instances.
-**TODO: numerical evidence of overfitting**
-In addition to our classification algorithm, our final PIFFS output code contains decision-making logic that essentially treats the model's output as suggestions rathan than direct instructions. By this we meen that we have established thresholds for how long a person must appear drowsy or asleep before they hear the corresponding alarm. This dramatically reduced the state flickering which is commmonly problematic in beginner classification programs like this. 
+
+In total, four different algortihms have been trained and tested for classification accuracy. The training sample did not change and included more than 500 instances. During the test, the "pilot" switched from the "Wakefulness" state to the "Drowsiness" state 10 times in a row. The same procedure was done for switching from the "Wakefulness" state to the "Sleeping" state. The detected accuracies can be seen in the Table below:
+
+| State                      | kNN (k=1) | kNN (k=5) | Decision Tree | Adaboost (with Decision Tree) |
+|----------------------------|-----------|-----------|---------------|-------------------------------|
+| Wakefulness --> Drowsiness | .8        | .9        | 1.0           | 1.0                           |
+| Wakefulness --> Sleepiness | 1.0       | .9        | .3            | .3                            |
+| Total                      | .9        | .9        | .65           | .65                           |
+
+From our test data it becomes obvious that Adaboost and Decision Tree have inferior performance to the kNN algortihms. For the purpose of this program it is more important to detect the more safety critical state of "Sleepiness". For this reason, the kNN (k=1) algorithm is chose over the kNN (k=5), even though they have the same total accuracy.
+
+In addition to our classification algorithm, our final PIFFS output code contains decision-making logic that essentially treats the model's output as suggestions rather than direct instructions. By this we meen that we have established thresholds for how long a person must appear drowsy or asleep before they hear the corresponding alarm. This dramatically reduced the state flickering which is commmonly problematic in beginner classification programs like this. 
 
 ## What We Learned
-For one, we learned that classification models alone can reliably detect if a person is _making an expression that resembles_ being drowsy or asleep, but relying on that alone leads to flickery output in the real world. To fully solve our problem, we must observe that a person is _behaving like_ they are drowsy or asleep, which requires tracking facial expressions over time. We achieved that by exploiting the rate at which our input sends OSC messages to the output (roughly 6 messages per second). Additionally, we learned:
+For one, we learned that classification models alone can reliably detect if a person is making an expression that resembles being drowsy or asleep, but relying on that alone leads to flickery output in the real world. To fully solve our problem, we must observe that a person is behaving like they are drowsy or asleep, which requires tracking facial expressions over time. We achieved that by exploiting the rate at which our input sends OSC messages to the output (roughly 6 messages per second). Additionally, we learned:
  - How to write Processing code
  - How to use images and sounds in a Processing program
  - How to train a classification model using facial recognition input
