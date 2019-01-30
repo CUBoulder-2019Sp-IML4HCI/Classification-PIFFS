@@ -39,7 +39,7 @@ In total, four different algortihms have been trained and tested for classificat
 | Wakefulness --> Sleepiness | 1.0       | .9        | .3            | .3                            |
 | Total                      | .9        | .9        | .65           | .65                           |
 
-From our test data it becomes obvious that Adaboost and Decision Tree have inferior performance to the kNN algortihms. For the purpose of this program it is more important to detect the more safety critical state of "Sleepiness". For this reason, the kNN (k=1) algorithm is chose over the kNN (k=5), even though they have the same total accuracy.
+From our test data it becomes obvious that Adaboost and Decision Tree have inferior performance to the kNN algortihms. For the purpose of this program it is more important to detect the more safety critical state of "Sleepiness". For this reason, the kNN (k=1) algorithm is chosen over the kNN (k=5), even though they have the same total accuracy.
 
 In addition to our classification algorithm, our final PIFFS output code contains decision-making logic that essentially treats the model's output as suggestions rather than direct instructions. By this we meen that we have established thresholds for how long a person must appear drowsy or asleep before they hear the corresponding alarm. This dramatically reduced the state flickering which is commmonly problematic in beginner classification programs like this. 
 
